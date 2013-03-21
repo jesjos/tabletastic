@@ -238,7 +238,7 @@ will product html like:
     </tbody>
   </table>
 
-For that last extra squeeze of micro-management, you can pass in a block to customize row classes with a block:
+For that last extra squeeze of micro-management, you can pass in a block to customize row classes:
   <%= table_for(@posts) do |t|
     t.row_class { |post| post.title }
   end %>
@@ -260,6 +260,12 @@ You can also choose to omit the odd and even classes:
       t.cell(:title)
     end
   end %>
+
+In HAML you would have to use a dash instead of an equals sign:
+
+  = table_for(@posts) do |t|
+    - t.row_class("foo")
+    = t.data
 
 
 If it _still_ isn't flexible enough for your needs, it might be time to return to static html/erb.
