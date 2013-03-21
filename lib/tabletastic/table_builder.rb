@@ -122,6 +122,23 @@ module Tabletastic
       self.cell(action, :heading => "", :cell_html => {:class => html_class}, &block)
     end
 
+    # Pass in a string to specify a class for each row
+    # For example:
+    #
+    #   row_class("foo")
+    #
+    #   <tr class="post odd foo"> ... </tr>
+    #
+    # Pass in an additional option to remove the odd/even classes, like so:
+    #
+    #   row_class("foo", odd_even: false) 
+    #
+    #   <tr class="post foo"> ... </tr>
+    #
+    # You can create dynamic classes by passing a block:
+    #
+    #   row_class {|post| post.my_custom_class_creating_method}
+    #
     def row_class(*args, &block)
       options = args.extract_options!
       css_block = block || lambda { |resource| args.first }
