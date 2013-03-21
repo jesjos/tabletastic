@@ -10,6 +10,7 @@ describe Tabletastic::TableBuilder do
     @post.stub!(:body).and_return("Lorem ipsum")
     @post.stub!(:created_at).and_return(Time.now)
     @post.stub!(:id).and_return(2)
+    @post.stub!(:foo).and_return("bar")
     @posts = [@post]
   end
 
@@ -253,7 +254,68 @@ describe Tabletastic::TableBuilder do
       it { should have_tag("td", "The title of the post") }
       it { should have_tag("td", "Lorem ipsum") }
     end
+    
+    context "with a custom row class" do
+      context "and odd-even" do
+        context "and string" do
+          before do
+            concat(table_for(@posts) do |t|
+              t.data do
+                t.row_class("foo")
+              end
+            end)
+          end
 
+          subject { output_buffer }
+
+          it { should have_tag("tr.foo.odd") }
+        end
+        context "and a block" do
+          before do
+            concat(table_for(@posts) do |t|
+              t.data do
+                t.row_class { |post| post.foo }
+              end
+            end)
+          end
+
+          subject { output_buffer }
+
+          it { should have_tag("tr.bar.odd") }
+        end
+      end
+
+      context "without odd even" do
+        context "and a block" do
+          before do
+            concat(table_for(@posts) do |t|
+              t.data do
+                t.row_class(odd_even: false) { |post| post.foo }
+              end
+            end)
+          end
+
+          subject { output_buffer }
+
+          it { should have_tag ("tr.bar") }
+          it { should_not have_tag("tr.bar.odd") }
+        end
+        context "and string" do
+          before do
+            concat(table_for(@posts) do |t|
+              t.data do
+                t.row_class("foo", odd_even: false)
+              end
+            end)
+          end
+
+          subject { output_buffer }
+          it { should_not have_tag("tr.foo.odd") }
+          it { should have_tag("tr.foo") }
+        end
+      end
+    end
+    
     context "with custom cell options" do
       before do
         concat(table_for(@posts) do |t|
