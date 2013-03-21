@@ -238,6 +238,22 @@ will product html like:
     </tbody>
   </table>
 
+For that last extra squeeze of micro-management, you can use the data block to customize row classes with a block:
+  <%= table_for(@posts) do |t|
+    t.data do
+      t.row_class { |post| post.title }
+    end
+  end %>
+
+Or with a string
+  <%= table_for(@posts) do |t|
+    t.data do
+      t.row_class("foobar")
+    end
+  end %>
+
+
+
 
 If it _still_ isn't flexible enough for your needs, it might be time to return to static html/erb.
 
