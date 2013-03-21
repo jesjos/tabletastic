@@ -9,6 +9,7 @@ module Tabletastic
 
     def initialize(collection, klass, template)
       @collection, @klass, @template = collection, klass, template
+      @produce_rowclass = lambda {|template, record| template.cycle("odd", "even") }
       @table_fields = []
     end
 
@@ -77,7 +78,7 @@ module Tabletastic
     def body
       content_tag(:tbody) do
         @collection.inject("\n") do |rows, record|
-          rowclass = @template.cycle("odd","even")
+          rowclass = @produce_rowclass.call(@template, record)
           rows += @template.content_tag_for(:tr, record, :class => rowclass) do
             cells_for_row(record)
           end + "\n"
@@ -119,6 +120,18 @@ module Tabletastic
         end
       end
       self.cell(action, :heading => "", :cell_html => {:class => html_class}, &block)
+    end
+
+    def row_class(*args, &block)
+      options = args.extract_options!
+      css_block = block || lambda { |resource| args.first }
+      if options.fetch(:odd_even, true)
+        @produce_rowclass = lambda do |template, resource| 
+          [template.cycle("odd", "even"), css_block.call(resource)].join(" ")
+        end
+      else
+        @produce_rowclass = lambda {|template, resource| css_block.call(resource)}
+      end
     end
 
     protected
