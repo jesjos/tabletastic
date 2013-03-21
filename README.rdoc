@@ -238,30 +238,29 @@ will product html like:
     </tbody>
   </table>
 
-For that last extra squeeze of micro-management, you can pass in a block to customize row classes:
+=== Customizing row classes
+
+For that last extra squeeze of micro-management, you can customize row classes by passing in a block:
   <%= table_for(@posts) do |t|
     t.row_class { |post| post.title }
+    t.data(:title)
   end %>
 
-Or with a string:
+Or just using a string:
 
   <%= table_for(@posts) do |t|
     t.row_class("foobar")
-    t.data do
-      t.cell(:title)
-    end
+    t.data(:title)
   end %>
 
 You can also choose to omit the odd and even classes:
 
   <%= table_for(@posts) do |t|
-    t.row_class(odd_even: false) { |post| post.title }
-    t.data do
-      t.cell(:title)
-    end
+    t.row_class("foobar", odd_even: false)
+    t.data(:title)
   end %>
 
-In HAML you would have to use a dash instead of an equals sign:
+In HAML you have to use a dash instead of an equals sign:
 
   = table_for(@posts) do |t|
     - t.row_class("foo")
