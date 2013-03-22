@@ -287,7 +287,7 @@ describe Tabletastic::TableBuilder do
         context "and a block" do
           before do
             concat(table_for(@posts) do |t|
-              t.row_class(odd_even: false) { |post| post.foo }
+              t.row_class(:odd_even => false) { |post| post.foo }
               t.data
             end)
           end
@@ -300,7 +300,7 @@ describe Tabletastic::TableBuilder do
         context "and string" do
           before do
             concat(table_for(@posts) do |t|
-              t.row_class("foo", odd_even: false)
+              t.row_class("foo", :odd_even => false)
               t.data
             end)
           end
